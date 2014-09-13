@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css" />
+	<link rel="stylesheet" href="/css/leaflet.label.css" />
+	<script src="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.js"></script>
+	<script src="/js/leaflet.label.js"></script>
+	<style>
+		#map { height: 700px; width: 700px; }
+	</style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<%= @points %>
+
+<script>
+	var places = <%= @places %>;
+	var points = <%= @points %>;
+
+	points.push(points[0]);
+
+	// Create map
+	var map = L.map('map').setView([47.000, 2.000], 6);
+	L.tileLayer('http://{s}.tile.cloudmade.com/{key}/115358/256/{z}/{x}/{y}.png', {
+		attribution: 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2012 CloudMade',
+		key: '54a94ac684bc42b9a02771c4e2f11694'
+	}).addTo(map);
+
+	// Add lines
+	var routeLines = [{
+		"type": "LineString",
+		"coordinates": points
+	}];
+
+	var lineStyle = {
+		"color": "#000",
+		"weight": 3,
+		"opacity": 0.6
+	};
+
+	L.geoJson(routeLines, {
+		style: lineStyle
+	}).addTo(map);
+
+	//Add points + labels
+
+	for (i = 0; i < points.length - 1; i++) {
+		L.circleMarker([points[i][1], points[i][0]]).addTo(map);
+	}
+
+
+</script>
+</body>
+</html>
